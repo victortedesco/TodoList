@@ -35,6 +35,17 @@ namespace TodoList.Testes.Controllers
         }
 
         [Fact]
+        public async Task GetAll_ReturnsNoContent()
+        {
+            _repository.Setup(r => r.GetAll()).ReturnsAsync([]);
+
+            var resultado = await _controller.GetAll();
+
+            var noContentResult = Assert.IsType<NoContentResult>(resultado);
+            Assert.Equal(204, noContentResult.StatusCode);
+        }
+
+        [Fact]
         public async Task GetById_ReturnsOk()
         {
             var id = Guid.NewGuid();
@@ -101,6 +112,17 @@ namespace TodoList.Testes.Controllers
             var okResult = Assert.IsType<OkObjectResult>(resultado);
             var model = Assert.IsAssignableFrom<List<Todo>>(okResult.Value);
             Assert.Equal(tarefas, model);
+        }
+
+        [Fact]
+        public async Task GetByStatus_ReturnsNoContent()
+        {
+            _repository.Setup(r => r.GetByStatus(false)).ReturnsAsync([]);
+
+            var resultado = await _controller.GetByStatus(false);
+
+            var noContentResult = Assert.IsType<NoContentResult>(resultado);
+            Assert.Equal(204, noContentResult.StatusCode);
         }
 
         [Fact]

@@ -8,7 +8,7 @@ namespace TodoList.Repositories
     {
         private readonly DbSet<Todo> _todos = dataContext.Todos;
 
-        public async Task<List<Todo>> GetAll()
+        public async Task<IEnumerable<Todo>> GetAll()
         {
             return await _todos.AsNoTracking().ToListAsync();
         }
@@ -31,7 +31,7 @@ namespace TodoList.Repositories
             return await _todos.AsNoTracking().FirstOrDefaultAsync(todo => todo.Title == title);
         }
 
-        public async Task<List<Todo>> GetByStatus(bool isComplete)
+        public async Task<IEnumerable<Todo>> GetByStatus(bool isComplete)
         {
             return await _todos.AsNoTracking().Where(todo => todo.IsComplete == isComplete).ToListAsync();
         }

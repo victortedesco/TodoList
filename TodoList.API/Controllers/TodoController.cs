@@ -11,10 +11,14 @@ namespace TodoList.Controllers
         private readonly ITodoRepository _todoRepository = todoRepository;
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<Todo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Todo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetAll()
         {
-            return Ok(await _todoRepository.GetAll());
+            var todos = await _todoRepository.GetAll();
+            if (!todos.Any())
+                return NoContent();
+            return Ok(todos);
         }
 
         [HttpGet]
@@ -26,7 +30,6 @@ namespace TodoList.Controllers
             var todo = await _todoRepository.GetById(id);
             if (todo == null)
                 return NotFound("Essa tarefa não existe.");
-
             return Ok(todo);
         }
 
@@ -39,16 +42,19 @@ namespace TodoList.Controllers
             var todo = await _todoRepository.GetByTitle(title);
             if (todo == null)
                 return NotFound("Essa tarefa não existe.");
-
             return Ok(todo);
         }
 
         [HttpGet]
         [Route("status/{isComplete}")]
-        [ProducesResponseType(typeof(List<Todo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(IEnumerable<Todo>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> GetByStatus(bool isComplete)
         {
-            return Ok(await _todoRepository.GetByStatus(isComplete));
+            var todos = await _todoRepository.GetByStatus(isComplete);
+            if (!todos.Any())
+                return NoContent();
+            return Ok(todos);
         }
 
         [HttpPost]
